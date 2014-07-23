@@ -1,19 +1,37 @@
 import urllib2 , re
 
-m = raw_input("Turkce kelime girin : ")
+turkce = raw_input("Turkce kelime girin : ")
 
-url = "http://glosbe.com/gapi/translate?from=tr&dest=en&format=json&phrase=" + m + "&callback=my_custom_function_name&pretty=true"
+url = "http://glosbe.com/gapi/translate?from=tr&dest=en&format=json&phrase=" + turkce + "&callback=my_custom_function_name&pretty=true"
 
-response = urllib2.urlopen(url)
+cevap = urllib2.urlopen(url)
 
-oku = response.read()
+oku = cevap.read()
 
-h = re.findall('"phrase" : {\n      "text" : "(.*?)"', oku)
+ingilizce = re.findall('"phrase" : {\n      "text" : "(.*?)"', oku)
+
+cumleler = re.findall('"text" : "(.*?)",',oku)
 
 dosya = open("turing.txt","a")
 
-satir =  m + "\t" + ":" + h[0] + "," + h[1] + "," + h[3] + "\n"
+satir =  turkce + "\t" + ":" + ingilizce[0] + "," + ingilizce[1] + "\n"
+
+for i in range(len(cumleler)) :
+
+       if len(cumleler[i]) >= 20 :
+
+               cumle = "Ornek cumle : " + cumleler[i] + "\n" + "\n"
+
+               break
+
+print satir
+
+print cumle
 
 dosya.write(satir)
+
+dosya.write(cumle)
+
+print "Kelime dosyaya eklendi."
 
 dosya.close
